@@ -20,13 +20,13 @@ jobs:
           dotnet-version: '5.0.x'  
 
       - name: Restore dependencies  
-        run: dotnet restore  
+        run: dotnet restore  MyApp/MyApp.csproj
 
       - name: Build  
-        run: dotnet build --no-restore  
+        run: dotnet build MyApp/MyApp.csproj --no-restore  
 
       - name: Run tests  
-        run: dotnet test --no-build --verbosity normal  
+        run: dotnet test MyApp/MyApp.csproj --no-build --verbosity normal  
 
       - name: Run DeepSource analysis  
         run: docker run --rm -v $(pwd):/workspace deepsourceio/analyzer run --analyzer csharp  
