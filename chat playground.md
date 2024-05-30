@@ -35,6 +35,7 @@ En el repositorio en GitHub, ve a la pestaña Actions.
 Haz clic en "Set up a workflow yourself" para crear un nuevo archivo de flujo de trabajo.
 Crea un archivo .github/workflows/ci.yml con el siguiente contenido:
 
+```yaml
 name: CI Pipeline  
 
 on:  
@@ -64,7 +65,7 @@ jobs:
 
       - name: Run tests  
         run: dotnet test --no-build --verbosity normal  
- 
+``` 
 
 Paso 4: Integrar Herramienta de Análisis de Código Basada en IA
 Vamos a usar DeepSource, una herramienta de análisis de código con capacidades de IA. Regístrate en DeepSource y enlaza tu repositorio.
@@ -79,7 +80,7 @@ enabled = true
 3. Actualiza el archivo ci.yml para incluir el análisis de código:
 
 
-```console
+```yaml
 name: CI Pipeline  
 
 on:  
