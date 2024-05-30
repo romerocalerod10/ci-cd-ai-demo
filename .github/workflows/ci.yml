@@ -35,4 +35,4 @@ jobs:
         run: dotnet test MyApp/MyApp.csproj --no-build --verbosity normal  
 
       - name: Run DeepSource Analysis  
-        run: ./bin/deepsource --analyze csharp --path MyApp/MyApp.csproj --config-file .deepsource.toml
+        run: ./bin/deepsource --analyzer csharp --path MyApp/MyApp.csproj --config-file .deepsource.toml
