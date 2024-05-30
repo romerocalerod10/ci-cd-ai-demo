@@ -28,5 +28,5 @@ jobs:
       - name: Run tests  
         run: dotnet test MyApp/MyApp.csproj --no-build --verbosity normal  
 
-      - name: Run DeepSource analysis  
-        run: docker run --rm -v $(pwd):/MyApp deepsourceio/analyzer run --analyzer csharp  
+      - name: Run DeepSource Analysis  
+        run: curl https://deepsource.io/cli | sh ./bin/deepsource report --analyzer csharp   

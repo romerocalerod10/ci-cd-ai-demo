@@ -3,3 +3,6 @@ version = 1
 [[analyzers]]
 name = "csharp"
 enabled = true
+
+[analyzers.meta]  
+runtime_version = "8.x.x"  # Reemplaza con la versión adecuada si es necesario 

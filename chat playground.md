@@ -1,26 +1,28 @@
-Estas diseñando un curso sobre el uso de la inteligencia artificial en las operaciones de integración continua y despliegue automatizado por medio de actions de Github. Quieres termina el curso de 4 horas con una actividad que puedan hacer los alumnos que tienen cuentas en Github. Describe al detalle esta práctica y todos los pasos a relaizar.
+*Estas diseñando un curso sobre el uso de la inteligencia artificial en las operaciones de integración continua y despliegue automatizado por medio de actions de Github. Quieres terminar el curso de 4 horas con una actividad que puedan hacer los alumnos que tienen cuentas en Github. Describe al detalle esta práctica y todos los pasos a realizar.*
 
 
 ## Título de la Actividad: Implementación de un Pipeline CI/CD con Análisis de Código Basado en IA en GitHub Actions
  
 
-Objetivo:
+### Objetivo:
 Los alumnos aprenderán a configurar un pipeline de CI/CD en GitHub Actions que incluye la integración de una herramienta de análisis de código basada en inteligencia artificial para mejorar la calidad del código y automatizar el despliegue.
-Requisitos Previos:
-Cuenta en GitHub.
-Conocimiento básico de GitHub Actions.
-Proyecto de ejemplo en un repositorio de GitHub (puede ser un simple proyecto en C# .NET).
-Pasos a Realizar:
- 
+### Requisitos Previos:
+* Cuenta en GitHub.
+* Conocimiento básico de GitHub Actions.
+* Proyecto de ejemplo en un repositorio de GitHub (puede ser un simple proyecto en C# .NET).
 
-Paso 1: Crear un Repositorio en GitHub
-Inicia sesión en tu cuenta de GitHub.
-Crea un nuevo repositorio. Puedes nombrarlo ci-cd-ai-demo.
-Inicializa el repositorio con un README.md y un archivo .gitignore adecuado para un proyecto en C#.
-Paso 2: Configurar el Proyecto de Ejemplo
-Clona el repositorio en tu máquina local.
-Crea un nuevo proyecto en C# .NET (puede ser una aplicación de consola simple) y empújalo al repositorio.
+## Pasos a Realizar:
 
+#### Paso 1: Crear un Repositorio en GitHub
+* Inicia sesión en tu cuenta de GitHub.
+* Crea un nuevo repositorio. Puedes nombrarlo *ci-cd-ai-demo*.
+* Inicializa el repositorio con un *README.md* y un archivo *.gitignore* adecuado para un proyecto en C#.
+
+#### Paso 2: Configurar el Proyecto de Ejemplo
+* Clona el repositorio en tu máquina local.
+* Crea un nuevo proyecto en C# .NET (puede ser una aplicación de consola simple) y subelo al repositorio.
+
+``` yaml
 dotnet new console -o MyApp  
 cd MyApp  
 dotnet build  
@@ -28,12 +30,12 @@ dotnet run
 git add .  
 git commit -m "Initial commit"  
 git push origin main  
- 
+```
 
-Paso 3: Configurar GitHub Actions para CI
-En el repositorio en GitHub, ve a la pestaña Actions.
-Haz clic en "Set up a workflow yourself" para crear un nuevo archivo de flujo de trabajo.
-Crea un archivo .github/workflows/ci.yml con el siguiente contenido:
+#### Paso 3: Configurar GitHub Actions para CI
+* En el repositorio en GitHub, ve a la pestaña Actions.
+* Haz clic en *Set up a workflow yourself* para crear un nuevo archivo de flujo de trabajo.
+* Crea un archivo .github/workflows/ci.yml con el siguiente contenido:
 
 ```yaml
 name: CI Pipeline  
@@ -67,17 +69,19 @@ jobs:
         run: dotnet test --no-build --verbosity normal  
 ``` 
 
-Paso 4: Integrar Herramienta de Análisis de Código Basada en IA
-Vamos a usar DeepSource, una herramienta de análisis de código con capacidades de IA. Regístrate en DeepSource y enlaza tu repositorio.
-En tu repositorio, crea un archivo .deepsource.toml con el siguiente contenido:
+#### Paso 4: Integrar Herramienta de Análisis de Código Basada en IA
+Vamos a usar [DeepSource](https://deepsource.com/), una herramienta de análisis de código con capacidades de IA. 
+* Regístrate en [DeepSource](https://deepsource.com/) y enlaza tu repositorio.
+* En tu repositorio, modifica el archivo *.deepsource.toml* con el siguiente contenido:
 
+```yaml
 version = 1  
 
 [[analyzers]]  
 name = "csharp"  
 enabled = true  
- 
-3. Actualiza el archivo ci.yml para incluir el análisis de código:
+```
+* Actualiza el archivo ci.yml para incluir el análisis de código:
 
 
 ```yaml
@@ -98,7 +102,7 @@ jobs:
         uses: actions/checkout@v2  
 
       - name: Setup .NET Core  
-        uses: actions/setup-dotnet@v1  
+        uses: actions/setup-dotnet@v2  
 
       - name: Restore dependencies  
         run: dotnet restore  
@@ -109,21 +113,26 @@ jobs:
       - name: Run tests  
         run: dotnet test --no-build --verbosity normal  
   
-      - name: Run DeepSource analysis  
-        run: docker run --rm -v $(pwd):/workspace deepsourceio/analyzer run --analyzer csharp 
+      - name: Run DeepSource Analysis  
+        run: curl https://deepsource.io/cli | sh  
+          ./bin/deepsource report --analyzer csharp   
 ``` 
  
 
-Paso 5: Configurar Despliegue Automatizado
-Vamos a configurar el despliegue automatizado a un entorno de Azure. Asegúrate de tener una cuenta de Azure y haber creado un App Service.
-En el portal de Azure, ve al App Service y selecciona "Deployment Center". Configura las credenciales de despliegue y obtén el nombre del usuario y el secreto de despliegue.
-En GitHub, ve a la configuración del repositorio y selecciona "Secrets". Agrega los siguientes secretos:
+#### Paso 5: Configurar Despliegue Automatizado
+Vamos a configurar el despliegue automatizado a un entorno de Azure. 
+* Asegúrate de tener una cuenta de Azure y haber creado un App Service.
+* En el portal de Azure, ve al App Service y selecciona *Deployment Center*. 
+* Configura las credenciales de despliegue y obtén el nombre del usuario y el secreto de despliegue.
+* En GitHub, ve a la configuración del repositorio y selecciona *Secrets*. 
+* Agrega los siguientes secretos:
 
 AZURE_WEBAPP_NAME: El nombre de tu App Service.
 AZURE_WEBAPP_PUBLISH_PROFILE: El contenido del perfil de publicación (puedes obtenerlo desde Azure Portal).
 
-Actualiza el archivo ci.yml para incluir el despliegue automatizado:
+Actualiza el archivo *ci.yml* para incluir el despliegue automatizado:
 
+```yaml
 name: CI/CD Pipeline  
 
 on:  
@@ -141,9 +150,9 @@ jobs:
         uses: actions/checkout@v2  
 
       - name: Setup .NET Core  
-        uses: actions/setup-dotnet@v1  
+        uses: actions/setup-dotnet@v2  
         with:  
-          dotnet-version: '5.0.x'  
+          dotnet-version: '8.0.x'  
 
       - name: Restore dependencies  
         run: dotnet restore  
@@ -163,54 +172,56 @@ jobs:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}  
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  
           package: .  
- 
+``` 
 
-Paso 6: Validar la Configuración
+#### Paso 6: Validar la Configuración
 Haz un commit y un push de todos los archivos de configuración al repositorio.
 
+```yaml
 git add .  
 git commit -m "Add CI/CD pipeline with AI code analysis"  
-git push origin main  
+git push origin main
+```
  
-2. Ve a la pestaña Actions en tu repositorio en GitHub y verifica que el flujo de trabajo se haya ejecutado correctamente. Deberías ver las etapas de build, test, análisis de código y despliegue.
+* Ve a la pestaña *Actions* en tu repositorio en GitHub y verifica que el flujo de trabajo se haya ejecutado correctamente. Deberías ver las etapas de *build, test, análisis de código y despliegue*.
 
-3. Verifica en DeepSource que los análisis de código se estén ejecutando y proporcionando feedback sobre el código.
+* Verifica en DeepSource que los análisis de código se estén ejecutando y proporcionando feedback sobre el código.
 
-4. Finalmente, verifica en Azure que tu aplicación se haya desplegado correctamente.
-Resumen de la Actividad:
-Crear un Repositorio en GitHub: Configurar un repositorio con un proyecto de ejemplo en C#.
-Configurar GitHub Actions para CI: Definir un flujo de trabajo para la construcción y prueba del código.
-Integrar Herramienta de Análisis de Código Basada en IA: Utilizar DeepSource para realizar análisis de código.
+* Finalmente, verifica en Azure que tu aplicación se haya desplegado correctamente.
 
-Configurar Despliegue Automatizado: Configurar GitHub Actions para desplegar automáticamente la aplicación a un App Service de Azure.
-Validar la Configuración: Confirmar que todos los pasos del pipeline se ejecutan correctamente y que la aplicación se despliega exitosamente.
-Verificación Final:
-Verificar GitHub Actions:
-Navega a la pestaña Actions en tu repositorio de GitHub.
-Asegúrate de que el flujo de trabajo se ha ejecutado correctamente sin errores.
-Revisa las etapas del flujo de trabajo: Checkout code, Setup .NET Core, Restore dependencies, Build, Run tests, Run DeepSource analysis, y Deploy to Azure.
-Verificar DeepSource:
-Inicia sesión en DeepSource y navega al análisis de tu repositorio.
-Revisa los reportes generados y verifica que no haya errores críticos o vulnerabilidades en el código.
-Toma nota de las recomendaciones y sugerencias proporcionadas por DeepSource para mejorar la calidad del código.
-Verificar Despliegue en Azure:
-Inicia sesión en el portal de Azure y navega a tu App Service.
-Verifica que la última versión de tu aplicación esté desplegada y funcionando correctamente.
-Abre la URL de tu App Service para confirmar que la aplicación se ejecuta sin problemas.
-Consideraciones Adicionales:
-Notificaciones: Puedes agregar pasos adicionales en tu flujo de trabajo de GitHub Actions para enviar notificaciones a Slack, Teams, o correo electrónico cuando el despliegue sea exitoso o falle.
-Rollbacks: Implementa estrategias de rollback en caso de que una nueva versión de tu aplicación tenga errores críticos. Puedes configurar GitHub Actions para revertir a una versión anterior automáticamente.
-Monitoreo y Alertas: Considera integrar herramientas de monitoreo y alertas, como Azure Application Insights, para supervisar el rendimiento y la disponibilidad de tu aplicación desplegada.
-Conclusión:
-Al finalizar esta actividad, los alumnos habrán configurado un pipeline de CI/CD completo que incluye construcción, pruebas, análisis de código basado en inteligencia artificial y despliegue automatizado a un entorno de producción. Esta práctica les proporciona una comprensión sólida de cómo utilizar herramientas modernas para garantizar la calidad del código y automatizar los procesos de despliegue, lo cual es esencial en el desarrollo de software ágil y eficiente.
-Recursos Adicionales:
-GitHub Actions Documentation
-DeepSource Documentation
-Azure App Service Documentation
-Feedback y Preguntas:
-Al final de la actividad, abre un espacio para preguntas y feedback. Asegúrate de resolver cualquier duda que los alumnos puedan tener y proporcionarles recursos adicionales si es necesario.
+### Resumen de la Actividad:
+* Crear un Repositorio en GitHub: Configurar un repositorio con un proyecto de ejemplo en C#.
+* Configurar GitHub Actions para CI: Definir un flujo de trabajo para la construcción y prueba del código.
+* Integrar Herramienta de Análisis de Código Basada en IA: Utilizar DeepSource para realizar análisis de código.
 
-Espero que esta práctica detallada sea útil para tu curso y que los alumnos encuentren valiosa la experiencia de implementar un pipeline CI/CD con análisis de código basado en IA. ¡Buena suerte con el curso!
+* Configurar Despliegue Automatizado: Configurar GitHub Actions para desplegar automáticamente la aplicación a un App Service de Azure.
+* Validar la Configuración: Confirmar que todos los pasos del pipeline se ejecutan correctamente y que la aplicación se despliega exitosamente.
+
+### Verificación Final:
+#### Verificar GitHub Actions:
+* Navega a la pestaña Actions en tu repositorio de GitHub.
+* Asegúrate de que el flujo de trabajo se ha ejecutado correctamente sin errores.
+* Revisa las etapas del flujo de trabajo: Checkout code, Setup .NET Core, Restore dependencies, Build, Run tests, Run DeepSource analysis, y Deploy to Azure.
+
+#### Verificar DeepSource:
+* Inicia sesión en DeepSource y navega al análisis de tu repositorio.
+* Revisa los reportes generados y verifica que no haya errores críticos o vulnerabilidades en el código.
+* Toma nota de las recomendaciones y sugerencias proporcionadas por DeepSource para mejorar la calidad del código.
+
+### Verificar Despliegue en Azure:
+* Inicia sesión en el portal de Azure y navega a tu App Service.
+* Verifica que la última versión de tu aplicación esté desplegada y funcionando correctamente.
+* Abre la URL de tu App Service para confirmar que la aplicación se ejecuta sin problemas.
+
+### Consideraciones Adicionales:
+* Notificaciones: Puedes agregar pasos adicionales en tu flujo de trabajo de GitHub Actions para enviar notificaciones a Slack, Teams, o correo electrónico cuando el despliegue sea exitoso o falle.
+* Rollbacks: Implementa estrategias de rollback en caso de que una nueva versión de tu aplicación tenga errores críticos. Puedes configurar GitHub Actions para revertir a una versión anterior automáticamente.
+* Monitorización y Alertas: Considera integrar herramientas de monitoreo y alertas, como Azure Application Insights, para supervisar el rendimiento y la disponibilidad de tu aplicación desplegada.
+
+### Conclusión:
+Al finalizar esta actividad, los alumnos habrán configurado un pipeline de CI/CD completo que incluye construcción, pruebas, análisis de código basado en inteligencia artificial y despliegue automatizado a un entorno de producción. 
+
+Esta práctica les proporciona una comprensión sólida de cómo utilizar herramientas modernas para garantizar la calidad del código y automatizar los procesos de despliegue, lo cual es esencial en el desarrollo de software ágil y eficiente.
 
 
 
