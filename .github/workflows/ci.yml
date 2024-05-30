@@ -22,6 +22,9 @@ jobs:
       - name: Restore dependencies  
         run: dotnet restore  MyApp/MyApp.csproj
 
+      - name: Download DeepSource CLI  
+        run: curl https://deepsource.io/cli | sh 
+
       - name: Build  
         run: dotnet build MyApp/MyApp.csproj --no-restore  
 
@@ -29,4 +32,4 @@ jobs:
         run: dotnet test MyApp/MyApp.csproj --no-build --verbosity normal  
 
       - name: Run DeepSource Analysis  
-        run: curl https://deepsource.io/cli | sh ./bin/deepsource report --analyzer csharp   
+        run: deepsource report --analyzer csharp 
