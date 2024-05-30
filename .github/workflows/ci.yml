@@ -35,4 +35,4 @@ jobs:
         run: dotnet test MyApp/MyApp.csproj --no-build --verbosity normal  
 
       - name: Run DeepSource Analysis  
-        run: ./bin/deepsource report --analyzer test-coverage --key csharp --value-file MyApp/deepsource_report.xml
+        run: ./bin/deepsource report --analyzer csharp --key csharp --value-file MyApp/deepsource_report.xml
