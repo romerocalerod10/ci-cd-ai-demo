@@ -34,15 +34,5 @@ jobs:
       - name: Execute tests  
         run: dotnet test MyApp/MyApp.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage"
 
-      - name: Find and move coverage report  
-        run: |
-          COVERAGE_FILE=$(find . -type f -name 'coverage.cobertura.xml' | head -n 1)
-          if [ -z "$COVERAGE_FILE" ]; then
-            echo "No coverage file found."
-            exit 1
-          fi
-          echo "Coverage file: $COVERAGE_FILE"
-          mv "$COVERAGE_FILE" MyApp/deepsource_report.xml
-
       - name: Perform DeepSource Analysis  
         run: ./bin/deepsource report --analyzer test-coverage --key csharp --value-file MyApp/deepsource_report.xml
