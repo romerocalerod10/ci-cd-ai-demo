@@ -1,4 +1,5 @@
-name: DeepSource
+name: Code Quality Check
+
 on:  
   push:  
     branches: [ main ]  
@@ -6,33 +7,38 @@ on:
     branches: [ main ]  
 
 jobs:  
-  build:  
+  analysis:  
     runs-on: ubuntu-latest  
 
     env:  
-      DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
+      DSN: ${{ secrets.DEEPSOURCE_DSN }}
 
     steps:  
-      - name: Checkout code  
+      - name: Checkout repository  
         uses: actions/checkout@v2  
 
-      - name: Setup .NET Core  
+      - name: Install .NET SDK  
         uses: actions/setup-dotnet@v2  
         with:  
-          dotnet-version: '8.0.x'  
+          dotnet-version: '8.x'  
 
-      - name: Restore dependencies  
-        run: dotnet restore  MyApp/MyApp.csproj
+      - name: Restore NuGet packages  
+        run: dotnet restore MyApp/MyApp.csproj
 
-      - name: Download DeepSource CLI  
-        run: curl https://deepsource.io/cli | sh 
+      - name: Get DeepSource CLI  
+        run: curl -s https://deepsource.io/cli | sh 
 
-      - name: Build  
+      - name: Build solution  
         run: dotnet build MyApp/MyApp.csproj --no-restore  
 
-      - name: Run tests  
-        run: dotnet test MyApp/MyApp.csproj --no-build --verbosity normal  
+      - name: Execute tests  
+        run: dotnet test MyApp/MyApp.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage"
 
-      - name: Run DeepSource Analysis  
+      - name: Show coverage file path
+        run: echo $(find . -type f -name 'coverage.cobertura.xml')
+
+      - name: Move coverage report  
+        run: mv $(find . -type f -name 'coverage.cobertura.xml') MyApp/deepsource_report.xml
+
+      - name: Perform DeepSource Analysis  
         run: ./bin/deepsource report --analyzer test-coverage --key csharp --value-file MyApp/deepsource_report.xml
-
