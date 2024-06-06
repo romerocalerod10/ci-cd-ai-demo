@@ -35,10 +35,13 @@ jobs:
         run: dotnet test MyApp/MyApp.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage"
 
       - name: Show coverage file path
-        run: echo $(find . -type f -name 'coverage.cobertura.xml')
+        run: find . -type f -name 'coverage.cobertura.xml'
 
       - name: Move coverage report  
-        run: mv $(find . -type f -name 'coverage.cobertura.xml') MyApp/deepsource_report.xml
+        run: |
+          COVERAGE_FILE=$(find . -type f -name 'coverage.cobertura.xml')
+          echo "Coverage file: $COVERAGE_FILE"
+          mv $COVERAGE_FILE MyApp/deepsource_report.xml
 
       - name: Perform DeepSource Analysis  
         run: ./bin/deepsource report --analyzer test-coverage --key csharp --value-file MyApp/deepsource_report.xml
