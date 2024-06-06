@@ -23,7 +23,7 @@ jobs:
           dotnet-version: '8.0.x'  
 
       - name: Restore dependencies  
-        run: dotnet restore  MyApp/MyApp.csproj
+        run: dotnet restore MyApp/MyApp.csproj
 
       - name: Download DeepSource CLI  
         run: curl https://deepsource.io/cli | sh 
@@ -33,6 +33,12 @@ jobs:
 
       - name: Run tests  
         run: dotnet test MyApp/MyApp.csproj --no-build --verbosity normal  
+
+      - name: Generate coverage report
+        run: dotnet test MyApp/MyApp.csproj --collect:"XPlat Code Coverage" --results-directory ./coverage
+
+      - name: Move coverage report to expected location
+        run: mv ./coverage/*/coverage.cobertura.xml MyApp/deepsource_report.xml
 
       - name: Run DeepSource Analysis  
         run: ./bin/deepsource report --analyzer test-coverage --key csharp --value-file MyApp/deepsource_report.xml
