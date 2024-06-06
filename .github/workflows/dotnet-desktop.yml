@@ -77,15 +77,16 @@ jobs:
       run: |
         curl https://deepsource.io/cli | sh
 
-    - name: DeepSource Analyze
+    - name: DeepSource Exec
       env:
         DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
       run: |
-        ./bin/deepsource analyze --key $DEEPSOURCE_DSN
+        ./bin/deepsource exec --key $DEEPSOURCE_DSN
 
     - name: Report test coverage
       env:
         DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
         DOTNET_ROOT: /home/runner/.dotnet
       run: |
+        ./bin/deepsource report --analyzer test-coverage --key csharp --value-file MyApp/deepsource_report.xml
         ./bin/deepsource report --analyzer test-coverage --key csharp --value-file MyApp/deepsource_report.xml
